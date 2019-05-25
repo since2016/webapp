@@ -17,23 +17,8 @@ import os
 import jinja2
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
-jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir))
-
-hidden_html = """
-<input type="hidden" name="food" value="%s">
-
-"""
-
-item_html = "<li>%s</li>"
-
-shopping_item = """
-<br>
-<br>
-<h2>Shopping list</h2>
-<ul>
-%s
-</ul>
-"""
+jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
+                               autoescape=True)
 
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -48,22 +33,8 @@ class Handler(webapp2.RequestHandler):
 
 class MainPage(Handler):
     def get(self):
-        self.render("shopping_list.html")
-
-        # output = form_html
-        # output_hidden = ""
-        # items = self.request.get_all("food")
-        # if items:
-        #     output_items = ""
-        #     for item in items:
-        #         output_hidden+= hidden_html% item
-        #         output_items += item_html%item
-        #
-        #     output_shopping = shopping_item % output_items
-        #     output += output_shopping
-        #
-        # output += output_shopping % output_hidden
-        # self.write(output)
+        items = self.request.get_all("food")
+        self.render("shopping_list.html", items = items)
 
 class FizzBuzzHandler(Handler):
     def get(self):
